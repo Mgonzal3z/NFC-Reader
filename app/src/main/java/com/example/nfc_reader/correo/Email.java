@@ -26,11 +26,11 @@ public class Email {
 
 		Properties.put("mail.smtp.host", "smtp.gmail.com");
 		Properties.put("mail.smtp.port", 587);
-		Properties.put("mail.smtp.mail.sender", "parkeacolombianoreply@gmail.com");
-		Properties.put("mail.smtp.user", "parkeacolombianoreply@gmail.com");
+		Properties.put("mail.smtp.mail.sender", "dreal@unbosque.edu.co");
+		Properties.put("mail.smtp.user", "dreal@unbosque.edu.co");
 		Properties.put("mail.smtp.auth", "true");
 		Properties.put("mail.smtp.starttls.enable", "true");
-		contrasena = "szoiwmicdocemrie";
+		contrasena = "wpehnnrqqamagsgy";
 		try {
 			sesion = Session.getInstance(Properties, new GMailAuthenticator((String) Properties.get("mail.smtp.user"), contrasena));
 		}catch (Exception e){
@@ -41,12 +41,11 @@ public class Email {
 	}
 /**
  * enviarMail utiliza las propiedades para conectar con el servidor de emails, envia un mensaje personalizado con el usuario y la contraseña .
- * @param nombre
- * @param usuario
+ *
+ * @param nfcContent
  * @param correo
- * @param contrasena
  */
-	public void enviarMailRegistro(String nombre, String usuario, String correo, String contrasena) {
+	public void enviarMailLectura(String nfcContent, String correo) {
 		init();
 		try {
 			MimeMessage mensaje = new MimeMessage(sesion);
@@ -54,7 +53,7 @@ public class Email {
 			mensaje.setReplyTo(InternetAddress.parse((String)Properties.get("mail.smtp.mail.sender"), false));
 			mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(correo, false));
 			mensaje.setSubject("Producto", "UTF-8");
-			mensaje.setText("Bienvenid@ a Par-kea Colombia\nEstimad@ "+nombre+".\nNos alegra que te hayas unido a nuestra comunidad.\nNombre de usuario : "+usuario+"\nContraseña : "+contrasena+"\nTe deseamos lo mejor.\n\n\n\nPor favor no responder este correo. Este correo fue enviado de forma automatica.", "UTF-8");
+			mensaje.setText("Bienvenid@ al Sistema \nSe ha realizado una Lectura de un Tag con el siguiente contenido:\n\n"+nfcContent+"\n\n\n\nPor favor no responder este correo. Este correo fue enviado de forma automatica.", "UTF-8");
 			Transport t = sesion.getTransport("smtp");
 			t.connect((String)Properties.get("mail.smtp.host"),(String)Properties.get("mail.smtp.user"),this.contrasena);
 			t.send(mensaje);

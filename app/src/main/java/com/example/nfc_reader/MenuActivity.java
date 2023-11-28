@@ -10,12 +10,16 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.nfc_reader.correo.Email;
 
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
@@ -29,13 +33,17 @@ public class MenuActivity extends AppCompatActivity{
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
     private Tag tag;
-
     private Context context;
+    private Email email;
+
+    private String nfcData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         context = this;
         nfcDataTextView = findViewById(R.id.articule);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -56,7 +64,7 @@ public class MenuActivity extends AppCompatActivity{
                     messages[i] = (NdefMessage) rawMessages[i];
                 }
                 // Obtener los datos de la etiqueta y mostrarlos en el TextView
-                String nfcData = "Tag ID = "+intent.getExtras().get("EXTRA_ID")+": ";
+                nfcData = "Tag ID = "+intent.getExtras().get("EXTRA_ID")+": ";
                 for (int i = 0;i<messages[0].getRecords().length;i++){
                     NdefRecord record = messages[0].getRecords()[i];
                     String msj="";
@@ -74,6 +82,17 @@ public class MenuActivity extends AppCompatActivity{
                 nfcData = nfcData + "\n"+horaAct;
                 nfcDataTextView.setText(nfcData);
                 Log.i("NFCTagReader",nfcData);
+                new AsyncTask<Void, Void, Void>() {
+                    @Override public Void doInBackground(Void... arg) {
+                        try {
+                            email = new Email();
+                            email.enviarMailLectura(nfcData, "real4895@gmail.com");
+                        } catch (Exception e) {
+                            Log.e("SendMail", e.getMessage(), e);
+                        }
+                        return null;
+                    }
+                }.execute();
             }
         }
     }
@@ -96,6 +115,7 @@ public class MenuActivity extends AppCompatActivity{
             Log.i("NFCID",hexString.toString());
             intent.putExtra("EXTRA_ID",""+hexString);
             readFromIntent(intent);
+
         }
 
     }
