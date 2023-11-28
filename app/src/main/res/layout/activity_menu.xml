@@ -56,6 +56,9 @@
                android:layout_height="wrap_content"
                android:layout_marginTop="10dp"
                android:text=""
+               android:fontFamily="@font/ranade_light"
+               android:textSize="12dp"
+               android:textAlignment="textStart"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toBottomOf="@+id/textView3" />
