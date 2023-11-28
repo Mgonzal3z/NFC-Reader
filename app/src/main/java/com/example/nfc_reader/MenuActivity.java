@@ -10,11 +10,18 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Formatter;
 
 public class MenuActivity extends AppCompatActivity{
 
@@ -49,16 +56,24 @@ public class MenuActivity extends AppCompatActivity{
                     messages[i] = (NdefMessage) rawMessages[i];
                 }
                 // Obtener los datos de la etiqueta y mostrarlos en el TextView
-                String nfcData = intent.getExtras().get("EXTRA_ID")+": ";
+                String nfcData = "Tag ID = "+intent.getExtras().get("EXTRA_ID")+": ";
                 for (int i = 0;i<messages[0].getRecords().length;i++){
                     NdefRecord record = messages[0].getRecords()[i];
-                    Toast.makeText(context, ""+record.toString(), Toast.LENGTH_LONG).show();
-                    Log.i("NFCTagReader",record.toString());
-                    nfcData = nfcData+"\n"+new String(record.getPayload());
+                    String msj="";
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        msj = new String(record.getPayload(), StandardCharsets.UTF_8);
+                    }
+                    Log.i("MSJRead",msj);
+                    Log.i("MSJRead",msj.substring(1,3));
+                    if(msj.substring(1,3).equals("en")){msj = msj.substring(3);}
+                    nfcData = nfcData+"\n"+msj;
                 }
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                String horaAct = "Hora: "+dateFormat.format(date);
+                nfcData = nfcData + "\n"+horaAct;
                 nfcDataTextView.setText(nfcData);
                 Log.i("NFCTagReader",nfcData);
-                Toast.makeText(context, nfcData, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -70,8 +85,16 @@ public class MenuActivity extends AppCompatActivity{
         if(NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())){
             tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Log.i("NFCIntent",tag.toString());
-            Log.i("NFCID",bytesToHexString(tag.getId()));
-            intent.putExtra("EXTRA_ID",bytesToHexString(tag.getId()));
+            StringBuilder hexString = new StringBuilder();
+            try (Formatter formatter
+                         = new Formatter(hexString)) {
+                for (byte b : tag.getId()) {
+                    formatter.format("%02x:", b);
+                }
+                hexString.deleteCharAt(hexString.length() - 1);
+            }
+            Log.i("NFCID",hexString.toString());
+            intent.putExtra("EXTRA_ID",""+hexString);
             readFromIntent(intent);
         }
 
@@ -99,23 +122,6 @@ public class MenuActivity extends AppCompatActivity{
         if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
         }
-    }
-
-    private String bytesToHexString(byte[] src) {
-        StringBuilder stringBuilder = new StringBuilder("0x");
-        if (src == null || src.length <= 0) {
-            return null;
-        }
-
-        char[] buffer = new char[2];
-        for (int i = 0; i < src.length; i++) {
-            buffer[0] = Character.forDigit((src[i] >>> 4) & 0x0F, 16);
-            buffer[1] = Character.forDigit(src[i] & 0x0F, 16);
-            System.out.println(buffer);
-            stringBuilder.append(buffer);
-        }
-
-        return stringBuilder.toString();
     }
 
 }
