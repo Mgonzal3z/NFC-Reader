@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import com.example.nfc_reader.correo.Email;
 
+import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractSet;
 import java.util.Date;
 import java.util.Formatter;
 
@@ -83,7 +85,8 @@ public class MenuActivity extends AppCompatActivity{
                 nfcDataTextView.setText(nfcData);
                 Log.i("NFCTagReader",nfcData);
                 new AsyncTask<Void, Void, Void>() {
-                    @Override public Void doInBackground(Void... arg) {
+                    @Override
+                    protected Void doInBackground(Void... arg) {
                         try {
                             email = new Email();
                             email.enviarMailLectura(nfcData, "real4895@gmail.com");

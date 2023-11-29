@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/violet600"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
     tools:context=".MainActivity">
 
     <TextView
@@ -15,20 +15,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-60dp"
         android:layout_marginBottom="200dp"
-        android:textColor="@color/slate100"
+        android:fontFamily="@font/satoshi_light_font"
         android:gravity="center"
         android:text="NFC\nReader"
+        android:textColor="@color/slate100"
         android:textSize="50sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/satoshi_light_font"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-120dp"
         android:text="Usuario"
-        android:textColor="@color/slate100"
-        android:layout_marginTop="-120dp"/>
+        android:textColor="@color/slate100" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/username"
@@ -36,14 +35,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/custom_edittext"
-        android:backgroundTint="@color/slate100"/>
+        android:backgroundTint="@color/slate100"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Contraseña"
-        android:textColor="@color/slate100"
-        android:layout_marginTop="20dp"/>
+        android:textColor="@color/slate100" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password"
@@ -51,19 +52,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/custom_edittext"
-        android:backgroundTint="@color/slate100"/>
+        android:backgroundTint="@color/slate100"
+        android:inputType="textPassword"
+        android:maxLength="8"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:textColor="@color/black" />
+
 
     <Button
+        android:id="@+id/btnLoggin"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:id="@+id/btnLoggin"
-        android:gravity="center"
-        android:text="SIGN IN"
-        android:fontFamily="@font/ranade_light"
-        android:textSize="15sp"
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/teal400"
-        app:cornerRadius="20dp"/>
+        android:fontFamily="@font/ranade_light"
+        android:gravity="center"
+        android:text="SIGN IN"
+        android:textSize="15sp"
+        app:cornerRadius="20dp" />
 
 
 </LinearLayout>
